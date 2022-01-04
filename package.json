@@ -1,5 +1,5 @@
 {
-  "name": "dgovernance",
+  "name": "ethidentity",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/narayanprusty/dGovernance.git"
+    "url": "git+https://github.com/narayanprusty/ethIdentity.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/narayanprusty/dGovernance/issues"
+    "url": "https://github.com/narayanprusty/ethIdentity/issues"
   },
-  "homepage": "https://github.com/narayanprusty/dGovernance#readme",
+  "homepage": "https://github.com/narayanprusty/ethIdentity#readme",
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.3",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
