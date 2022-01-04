@@ -55,7 +55,7 @@ contract Identity {
   to detect type of errors or dynamically create the error data. its
   difficult to create dynamic strings in solidity so custom errors are in this case
   */
-  error UnwantedUpdate(address id, UserStatus status);
+  error UnwantedUpdate(address id, string name);
 
   constructor () {
     /* 
@@ -100,19 +100,16 @@ contract Identity {
   function aruments have a additional data location called as call data.
   calldata makes the argument unmodifiable and is gas efficient 
 
-  external makes it accessible externally only 
+  external makes it accessible externally only. it cannot be called internally by
+  another function
   */
-  function registerUser (string calldata name, uint age) external onlyOwner {
-    User memory user = User(name, UserStatus.ACTIVE, age);
-
-    /*
-    assigments from memory to memory always creates a reference
-    */
-    address id = msg.sender;
+  function registerUser (string calldata name, uint age, address id) external onlyOwner {
+    User memory user = User(name, UserStatus.BLOCKED, age);
 
     /* 
     assignments from memory to storage or vice-versa always creates an
-    independent copy 
+    independent copy. whereas assignments from memory to memory always 
+    creates an reference
     */
     users[id] = user;
 
@@ -136,6 +133,13 @@ contract Identity {
     */    
     User storage user = users[id];
 
+    /*
+    check if map key exists
+    */
+    if(user.age == 0) {
+      revert("User doesn't exist");
+    }
+
     if (user.status == UserStatus.ACTIVE) {
       return true;
     }
@@ -143,21 +147,27 @@ contract Identity {
     return false;
   }
 
-  function updateUserStatus (address id, UserStatus status) external onlyOwner {
+  function updateUserName (address id, string memory name) external onlyOwner {
     User storage user = users[id];
 
+    bytes32 oldNameHash = keccak256(bytes(user.name));
+    bytes32 nameHash = keccak256(bytes(name));
     
-    if (user.status == status) {
+    /* 
+    you cannot compare strings in solidity so we has to apply this
+    trick
+    */
+    if (oldNameHash == nameHash) {
       /*
       revert is similar to require but it doesn't have a condition parameter and takes
       a error message string only
 
       also to throw custom errors we need to use revert
       */
-      revert UnwantedUpdate(id, status);
+      revert UnwantedUpdate(id, name);
     }
    
-    user.status = status;
+    user.name = name;
 
     /* 
     .push(...) is used to append (i.e., assign) an element to end of 
@@ -167,5 +177,47 @@ contract Identity {
     from memory, local storage or storage
     */
     history[id].push(user);
+  }
+
+  /* 
+  payable is an internal modifier which allows this function to receive ether.
+  if payable is not specified and an transaction or external contract calls 
+  this function with non-zero ether value then the transaction will be rejected
+  and ether will be refunded 
+  */
+  function activateProfile () external payable {
+    if (isUserActive(msg.sender) == false) {
+      if (msg.value >= 0.1 ether) {
+        users[msg.sender].status = UserStatus.ACTIVE;
+      } else {
+        revert("Insufficient fees");
+      }
+    } else {
+      revert("User is already active");
+    }
+  }
+
+  /* 
+  this function is called when the transaction data doesn't match any function name
+
+  the payable modifier here indicates that this function will be called even if
+  there is non-zero ether sent. if we remove the payable modifier then this will be
+  called only if ether value is 0 and function name doesn't match
+
+  in case payable modifier is removed and the function name doesn't match and ether value
+  is non-zero then the transaction fails and ether is refunded. 
+  */
+  fallback() external payable {
+    revert();
+  }
+
+  /* 
+  this is called when a transaction sends ether to the contract without any data
+
+  if this function is not defined then the transaction reverts and the ether
+  is refunded to the caller
+  */
+  receive() external payable {
+    revert();
   }
 }

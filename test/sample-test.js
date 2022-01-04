@@ -7,15 +7,23 @@ describe("Identity", function () {
     const identity = await Identity.deploy();
     await identity.deployed();
 
+    const accounts = await ethers.getSigners()
+    const owner = accounts[0]
+    const user = accounts[1]
     
-    expect(await identity.owner()).to.equal((await ethers.getSigners())[0].address);
-    // expect(await identity.owner()).to.equal();
+    expect(await identity.owner()).to.equal(owner.address);
 
-    // const setGreetingTx = await greeter.setGreeting("Hola, mundo!");
+    const registerUserTx = await identity.registerUser("Narayan", 27, user.address);
+    await registerUserTx.wait();
 
-    // // wait until the transaction is mined
-    // await setGreetingTx.wait();
+    await identity.connect(user).activateProfile({
+      value: ethers.utils.parseEther("1.0")
+    });
 
-    // expect(await greeter.greet()).to.equal("Hola, mundo!");
+    //https://ethereum-waffle.readthedocs.io/en/latest/matchers.html#revert
+    await expect(owner.sendTransaction({
+      to: identity.address,
+      value: ethers.utils.parseEther("1.0")
+    })).to.be.reverted;
   });
 });
