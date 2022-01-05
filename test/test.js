@@ -4,7 +4,7 @@ const { ethers } = require("hardhat");
 describe("Identity", function () {
   it("Should return the owner of the identity contract", async function () {
     const Identity = await ethers.getContractFactory("Identity");
-    const identity = await Identity.deploy();
+    const identity = await Identity.deploy("Identity", "ID");
     await identity.deployed();
 
     const accounts = await ethers.getSigners()

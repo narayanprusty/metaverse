@@ -1,9 +1,24 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
+/*
+you can import .sol files from npm, local directory,
+github URL, swarm and IPFS. 
+*/
 import "hardhat/console.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-contract Identity {
+/*
+a contract can inherit one ore more contracts. in solidity
+inhertance basically copies code from parent contract to
+child contract
+
+ERC721 is standard for representing NFTs. Each ERC721 holds
+multiple NFTs of an DApp. For example: A Pokemon like game
+will have a ERC721 contracts and each pokemons will be 
+represented by a token. Each token will have an owner.
+*/
+contract Identity is ERC721 {
 
   enum UserStatus {
     ACTIVE,
@@ -35,8 +50,9 @@ contract Identity {
   it cannot be accessed by derived contracts or externally 
   */
   mapping (address => User) private users;
-
   mapping (address => User[]) private history;
+
+  uint256 private tokenCounter;
 
   /*
   every transaction generates logs stored in transaction receipt. each txn log
@@ -57,7 +73,14 @@ contract Identity {
   */
   error UnwantedUpdate(address id, string name);
 
-  constructor () {
+  /*
+  constructor is executed during initialization of the contract. if you are inheriting
+  other contracts then you must invoke their constructors also
+  */
+  constructor (
+    string memory name,
+    string memory symbol
+  ) ERC721(name, symbol) {
     /* 
     you must explicitly cast address to address payable 
     but you can cast address payable to address explicitly or implicitly 
@@ -189,6 +212,14 @@ contract Identity {
     if (isUserActive(msg.sender) == false) {
       if (msg.value >= 0.1 ether) {
         users[msg.sender].status = UserStatus.ACTIVE;
+
+        /*
+        here we are creating an NFT representing your identity
+
+        tokenCounter represents unique ID of each identity NFT
+        */
+        _mint(msg.sender, tokenCounter);
+        tokenCounter++;
       } else {
         revert("Insufficient fees");
       }
