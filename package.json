@@ -1,5 +1,5 @@
 {
-  "name": "ethidentity",
+  "name": "metaverse",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/narayanprusty/ethIdentity.git"
+    "url": "git+https://github.com/narayanprusty/metaverse.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/narayanprusty/ethIdentity/issues"
+    "url": "https://github.com/narayanprusty/metaverse/issues"
   },
-  "homepage": "https://github.com/narayanprusty/ethIdentity#readme",
+  "homepage": "https://github.com/narayanprusty/metaverse#readme",
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.3",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
