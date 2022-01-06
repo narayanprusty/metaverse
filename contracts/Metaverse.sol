@@ -30,4 +30,28 @@ contract Metaverse is ERC721, Identity {
     string memory name,
     string memory symbol
   ) ERC721(name, symbol) Identity() {}
+
+  /* 
+  this function is called when the transaction data doesn't match any function name
+
+  the payable modifier here indicates that this function will be called even if
+  there is non-zero ether sent. if we remove the payable modifier then this will be
+  called only if ether value is 0 and function name doesn't match
+
+  in case payable modifier is removed and the function name doesn't match and ether value
+  is non-zero then the transaction fails and ether is refunded. 
+  */
+  fallback() external payable {
+    revert();
+  }
+
+  /* 
+  this is called when a transaction sends ether to the contract without any data
+
+  if this function is not defined then the transaction reverts and the ether
+  is refunded to the caller
+  */
+  receive() external payable {
+    revert();
+  }
 }
