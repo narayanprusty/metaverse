@@ -1,12 +1,14 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-describe("Metaverse", function () {
+describe("Metaverse", async function () {
+  let metaverse = null;
+  
   it("Should test user profile creation in metaverse", async function () {
     const Metaverse = await ethers.getContractFactory("Metaverse");
-    const metaverse = await Metaverse.deploy("Metaverse", "META");
+    metaverse = await Metaverse.deploy("Metaverse", "META");
     await metaverse.deployed();
-
+    
     const accounts = await ethers.getSigners()
     const owner = accounts[0]
     const user = accounts[1]
@@ -26,4 +28,17 @@ describe("Metaverse", function () {
       value: ethers.utils.parseEther("1.0")
     })).to.be.reverted;
   });
+
+  it("Should test token data in metaverse", async function () {
+    const tokenId = parseInt((await metaverse.tokenCounter()).toString()) - 1
+    expect(tokenId).to.equal(0);
+
+    const tokenData = "https://example.com/";
+    const setTokenDataTx = await metaverse.setTokenData(tokenId, tokenData)
+    await setTokenDataTx.wait();
+
+    const fetchedTokenData = await metaverse.getTokenData(tokenId)
+
+    expect(fetchedTokenData).to.equal(tokenData);
+  })
 });

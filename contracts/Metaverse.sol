@@ -52,30 +52,27 @@ contract Metaverse is ERC721, Identity, Object {
   /*
   override keyword must be specified to override a virtual function
   */
-  function _profileActivated(address _id) internal override {
-    _mint(_id, tokenCounter);
-    tokenCounter++;
+  function _profileActivated(address id) internal override {
+    _mint(id, tokenCounter);
+    tokenCounter += 1;
   }
 
   /*
-  you don't need to specify override keyword when overriding interface
-  functions because override is added implicitely
-
   you can refer to functions of parent contract in child contract using the syntax
   {parentContractName}.{functionName} or just the functionName. if two parent contract
   have same function name then the earlier format is required to point to a specific one. 
   */
-  function setTokenData(uint256 _tokenId, string memory _data) onlyOwner external {
+  function setTokenData(uint256 tokenId, string memory data) onlyOwner external override {
     require(
-      _exists(_tokenId),
+      _exists(tokenId),
       "ERC721Metadata: token doesn't exist"
     );
 
-    tokenData[_tokenId] = _data;
+    tokenData[tokenId] = data;
   }
 
-  function getTokenData(uint256 _tokenId) external view returns (string memory data) {
-    return tokenData[_tokenId];
+  function getTokenData(uint256 tokenId) external view override returns (string memory data) {
+    return tokenData[tokenId];
   }
 
   /* 

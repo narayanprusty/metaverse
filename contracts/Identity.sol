@@ -208,6 +208,7 @@ abstract contract Identity {
     if (isUserActive(msg.sender) == false) {
       if (msg.value >= 0.1 ether) {
         _users[msg.sender].status = UserStatus.ACTIVE;
+        _profileActivated(msg.sender);
       } else {
         revert("Insufficient fees");
       }
