@@ -11,8 +11,16 @@ import "./Identity.sol";
 
 /*
 a contract can inherit one ore more contracts. in solidity
-inhertance basically copies code from parent contract to
-child contract
+inhertance basically copies code (functions and modifiers) 
+from parent contract to child contract
+
+if there are functions with same function in parent contracts
+then they must be overridden.
+
+when overriding parent contract functions you need to make sure
+the funciton arguments match otherwise compiler will throw error
+
+state variables of parent contracts cannot be access by child contracts
 
 ERC721 is standard for representing NFTs. Each ERC721 holds
 multiple NFTs of an DApp. For example: A Pokemon like game
@@ -30,6 +38,13 @@ contract Metaverse is ERC721, Identity {
     string memory name,
     string memory symbol
   ) ERC721(name, symbol) Identity() {}
+
+  /*
+  override keyword must be specified to override a virtual function
+  */
+  function profileActivated(address id) internal override {
+    
+  }
 
   /* 
   this function is called when the transaction data doesn't match any function name

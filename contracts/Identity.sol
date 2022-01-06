@@ -3,7 +3,12 @@ pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
 
-contract Identity {
+/*
+a contract should be prefixed as abstract if atleast one of the functions
+is not implemented. you cannot deploy a contract if one of its functions
+is defined and not implemented
+*/
+abstract contract Identity {
 
   enum UserStatus {
     ACTIVE,
@@ -181,6 +186,18 @@ contract Identity {
     */
     history[id].push(user);
   }
+
+  /*
+  virtual keyword specifies that the function can be overridden by the
+  derived contracts. if this keyword is missing then the derived contract
+  cannot override it
+
+  this function has no implementation
+
+  the derived contract must implemented this function otherwise it cannot
+  be deployed
+  */
+  function profileActivated(address id) internal virtual;
 
   /* 
   payable is an internal modifier which allows this function to receive ether.
