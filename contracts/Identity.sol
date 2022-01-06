@@ -38,8 +38,8 @@ abstract contract Identity {
   private makes it accessible by current contract only.
   it cannot be accessed by derived contracts or externally 
   */
-  mapping (address => User) private users;
-  mapping (address => User[]) private history;
+  mapping (address => User) private _users;
+  mapping (address => User[]) private _history;
 
   /*
   every transaction generates logs stored in transaction receipt. each txn log
@@ -118,7 +118,7 @@ abstract contract Identity {
     independent copy. whereas assignments from memory to memory always 
     creates an reference
     */
-    users[id] = user;
+    _users[id] = user;
 
     /*
     send event
@@ -138,7 +138,7 @@ abstract contract Identity {
     /* 
     assignments from storage to local storage always creates reference   
     */    
-    User storage user = users[id];
+    User storage user = _users[id];
 
     /*
     check if map key exists
@@ -155,7 +155,7 @@ abstract contract Identity {
   }
 
   function updateUserName (address id, string memory name) external onlyOwner {
-    User storage user = users[id];
+    User storage user = _users[id];
 
     bytes32 oldNameHash = keccak256(bytes(user.name));
     bytes32 nameHash = keccak256(bytes(name));
@@ -183,7 +183,7 @@ abstract contract Identity {
     assignments to storage always creates a copy. the assignment can be 
     from memory, local storage or storage
     */
-    history[id].push(user);
+    _history[id].push(user);
   }
 
   /*
@@ -196,7 +196,7 @@ abstract contract Identity {
   the derived contract must implemented this function otherwise it cannot
   be deployed
   */
-  function profileActivated(address id) internal virtual;
+  function _profileActivated(address id) internal virtual;
 
   /* 
   payable is an internal modifier which allows this function to receive ether.
@@ -207,7 +207,7 @@ abstract contract Identity {
   function activateProfile () external payable {
     if (isUserActive(msg.sender) == false) {
       if (msg.value >= 0.1 ether) {
-        users[msg.sender].status = UserStatus.ACTIVE;
+        _users[msg.sender].status = UserStatus.ACTIVE;
       } else {
         revert("Insufficient fees");
       }
