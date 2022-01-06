@@ -5,8 +5,7 @@ import "hardhat/console.sol";
 
 /*
 a contract should be prefixed as abstract if atleast one of the functions
-is not implemented. you cannot deploy a contract if one of its functions
-is defined and not implemented
+is not implemented. you cannot deploy abstract contracts directly
 */
 abstract contract Identity {
 

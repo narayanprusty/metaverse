@@ -14,8 +14,8 @@ a contract can inherit one ore more contracts. in solidity
 inhertance basically copies code (functions and modifiers) 
 from parent contract to child contract
 
-if there are functions with same function in parent contracts
-then they must be overridden.
+when inheriting two or more contracts and if they have functions
+with same name then they must be overridden.
 
 when overriding parent contract functions you need to make sure
 the funciton arguments match otherwise compiler will throw error
@@ -43,7 +43,8 @@ contract Metaverse is ERC721, Identity {
   override keyword must be specified to override a virtual function
   */
   function profileActivated(address id) internal override {
-    
+    _mint(id, tokenCounter);
+    tokenCounter++;
   }
 
   /* 
