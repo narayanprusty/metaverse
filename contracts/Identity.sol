@@ -7,7 +7,7 @@ contract Identity {
 
   enum UserStatus {
     ACTIVE,
-    BLOCKED
+    INACTIVE
   }
 
   struct User {
@@ -107,7 +107,7 @@ contract Identity {
   another function
   */
   function registerUser (string calldata name, uint age, address id) external onlyOwner {
-    User memory user = User(name, UserStatus.BLOCKED, age);
+    User memory user = User(name, UserStatus.INACTIVE, age);
 
     /* 
     assignments from memory to storage or vice-versa always creates an
