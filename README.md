@@ -1,6 +1,6 @@
-# Basic Sample Hardhat Project
+# Metaverse Project
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
+This is metaverse build on Ethereum using Solidity. It allows users to create profile and get a NFT in the metaverse as bonus. Then the owner of the metaverse can add the data about the NFT user received. Users can then trade the NFTs they received.
 
 Try running some of the following tasks:
 
@@ -10,6 +10,6 @@ npx hardhat compile
 npx hardhat clean
 npx hardhat test
 npx hardhat node
-node scripts/sample-script.js
+node scripts/deploy.js
 npx hardhat help
 ```
