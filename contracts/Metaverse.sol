@@ -16,7 +16,7 @@ inhertance basically copies code (functions and modifiers)
 from parent contract to child contract
 
 when inheriting two or more contracts and if they have functions
-with same name then they must be overridden.
+with same name and signature then they must be overridden.
 
 when overriding parent contract functions you need to make sure
 the funciton arguments match otherwise compiler will throw error

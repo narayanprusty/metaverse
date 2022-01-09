@@ -18,7 +18,7 @@ describe("Metaverse", async function () {
     const registerUserTx = await metaverse.registerUser("Narayan", 27, user.address);
     await registerUserTx.wait();
 
-    await metaverse.connect(user).activateProfile({
+    await metaverse.connect(user)['activateProfile()']({
       value: ethers.utils.parseEther("1.0")
     });
 

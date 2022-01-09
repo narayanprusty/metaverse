@@ -198,6 +198,19 @@ abstract contract Identity {
   */
   function _profileActivated(address id) internal virtual;
 
+  function _activateProfile(address id) private {
+    if (isUserActive(id) == false) {
+      if (msg.value >= 0.1 ether) {
+        _users[id].status = UserStatus.ACTIVE;
+        _profileActivated(id);
+      } else {
+        revert("Insufficient fees");
+      }
+    } else {
+      revert("User is already active");
+    }
+  }
+
   /* 
   payable is an internal modifier which allows this function to receive ether.
   if payable is not specified and an transaction or external contract calls 
@@ -205,15 +218,18 @@ abstract contract Identity {
   and ether will be refunded 
   */
   function activateProfile () external payable {
-    if (isUserActive(msg.sender) == false) {
-      if (msg.value >= 0.1 ether) {
-        _users[msg.sender].status = UserStatus.ACTIVE;
-        _profileActivated(msg.sender);
-      } else {
-        revert("Insufficient fees");
-      }
-    } else {
-      revert("User is already active");
-    }
+    _activateProfile(msg.sender);
+  }
+
+  /*
+  in solidity you can have multiple function with same name and different
+  arguments
+
+  when calling a function it checks which function to call based on matching
+  arguments. similarly when overriding a function it overrides based 
+  on arguments matching
+  */
+  function activateProfile(address id) external payable {
+    _activateProfile(id);
   }
 }
